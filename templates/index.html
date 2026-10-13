@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scheduling GA Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="app-container">
+        <header class="topbar">
+            <h1>Tối ưu Lập lịch Đa máy</h1>
+            <p>Genetic Algorithm & Gantt Chart Visualization</p>
+        </header>
+
+        <main class="main-layout">
+            <section class="panel controls">
+                <h2>Điều khiển</h2>
+
+                <div class="form-row">
+                    <label>Số máy</label>
+                    <input id="machineCount" type="number" min="1" max="8" value="3" />
+                </div>
+
+                <div class="form-row">
+                    <label>Số công việc</label>
+                    <input id="jobCount" type="number" min="5" max="30" value="10" />
+                </div>
+
+                <div class="form-row">
+                    <label>Population</label>
+                    <input id="population" type="number" min="20" max="200" value="60" />
+                </div>
+
+                <div class="form-row">
+                    <label>Generations</label>
+                    <input id="generations" type="number" min="20" max="300" value="120" />
+                </div>
+
+                <div class="form-row">
+                    <label>Crossover</label>
+                    <input id="crossover" type="number" min="0.1" max="1" step="0.1" value="0.8" />
+                </div>
+
+                <div class="form-row">
+                    <label>Mutation</label>
+                    <input id="mutation" type="number" min="0.01" max="0.5" step="0.01" value="0.1" />
+                </div>
+
+                <div class="button-row">
+                    <button id="generateBtn" class="secondary">Sinh dữ liệu</button>
+                    <button id="runBtn" class="primary">Chạy thuật toán</button>
+                </div>
+            </section>
+
+            <section class="panel results">
+                <h2>Kết quả so sánh</h2>
+                <div class="stats-grid">
+                    <div class="stat-card lpt">
+                        <h3>Greedy</h3>
+                        <p class="metric" id="lptObjective">-</p>
+                        <small id="lptRuntime">-</small>
+                    </div>
+                    <div class="stat-card bb">
+                        <h3>B&B</h3>
+                        <p class="metric" id="bbObjective">-</p>
+                        <small id="bbRuntime">-</small>
+                    </div>
+                    <div class="stat-card ga">
+                        <h3>GA</h3>
+                        <p class="metric" id="gaObjective">-</p>
+                        <small id="gaRuntime">-</small>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Thuật toán</th>
+                                <th>Objective</th>
+                                <th>Runtime</th>
+                                <th>MakeSpan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultTableBody">
+                            <tr><td colspan="4">Chưa có dữ liệu</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <section class="panel gantt-panel">
+            <div class="gantt-header">
+                <h2>Gantt Chart</h2>
+                <span>Project Timeline</span>
+            </div>
+            <div class="gantt-board">
+                <div class="gantt-container" id="ganttContainer"></div>
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
