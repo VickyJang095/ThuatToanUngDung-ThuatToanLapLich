@@ -48,6 +48,15 @@ function renderGantt(algorithms) {
     container.innerHTML = '';
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const machineBackgrounds = [
+        'rgba(94, 201, 255, 0.2)',
+        'rgba(120, 224, 169, 0.2)',
+        'rgba(244, 191, 105, 0.2)',
+        'rgba(255, 139, 123, 0.2)',
+        'rgba(199, 168, 255, 0.2)',
+        'rgba(122, 215, 209, 0.2)'
+    ];
+
     const renderOne = (title, schedule, totalRange) => {
         const card = document.createElement('div');
         card.className = 'gantt-card';
@@ -55,6 +64,16 @@ function renderGantt(algorithms) {
         const heading = document.createElement('h3');
         heading.textContent = title;
         card.appendChild(heading);
+
+        const legend = document.createElement('div');
+        legend.className = 'gantt-legend';
+        schedule.forEach((_, index) => {
+            const item = document.createElement('span');
+            item.className = 'gantt-legend-item';
+            item.innerHTML = `<i style="background:${machineBackgrounds[index % machineBackgrounds.length]}; border: 1px solid rgba(255,255,255,0.2);"></i> M${index + 1}`;
+            legend.appendChild(item);
+        });
+        card.appendChild(legend);
 
         const monthRow = document.createElement('div');
         monthRow.className = 'gantt-months';
@@ -65,32 +84,37 @@ function renderGantt(algorithms) {
         });
         card.appendChild(monthRow);
 
-        const rows = schedule.map((machine, index) => {
-            const row = document.createElement('div');
-            row.className = 'gantt-task-row';
+        const displayRange = Math.max(1, totalRange * 0.7);
 
-            const label = document.createElement('div');
-            label.className = 'gantt-task-label';
-            label.textContent = `Machine ${index + 1}`;
+        const rows = [];
 
-            const track = document.createElement('div');
-            track.className = 'gantt-track';
-
+        schedule.forEach((machine, machineIndex) => {
             machine.jobs.forEach(job => {
-                const bar = document.createElement('div');
-                const left = (job.start / Math.max(totalRange, 1)) * 100;
-                const width = ((job.end - job.start) / Math.max(totalRange, 1)) * 100;
-                bar.className = `gantt-bar ${job.end <= job.d ? 'green' : 'red'}`;
-                bar.style.left = `${left}%`;
-                bar.style.width = `${Math.max(width, 6)}%`;
-                bar.textContent = `J${job.id}`;
-                bar.title = `Job ${job.id} | Start ${job.start} | End ${job.end} | Deadline ${job.d}`;
-                track.appendChild(bar);
-            });
+                const row = document.createElement('div');
+                row.className = 'gantt-task-row';
 
-            row.appendChild(label);
-            row.appendChild(track);
-            return row;
+                const label = document.createElement('div');
+                label.className = 'gantt-task-label';
+                label.textContent = `Task ${job.id}`;
+
+                const track = document.createElement('div');
+                track.className = 'gantt-track';
+                track.style.background = machineBackgrounds[machineIndex % machineBackgrounds.length];
+
+                const bar = document.createElement('div');
+                const left = (job.start / Math.max(displayRange, 1)) * 100;
+                const width = ((job.end - job.start) / Math.max(displayRange, 1)) * 100;
+                bar.className = `gantt-bar ${job.end <= job.d ? 'green' : 'red'}`;
+                bar.style.left = `${Math.min(left, 92)}%`;
+                bar.style.width = `${Math.max(Math.min(width * 0.9, 72), 6)}%`;
+                bar.textContent = `J${job.id}`;
+                bar.title = `Job ${job.id} | Machine ${machineIndex + 1} | Start ${job.start} | End ${job.end} | Deadline ${job.d}`;
+                track.appendChild(bar);
+
+                row.appendChild(label);
+                row.appendChild(track);
+                rows.push(row);
+            });
         });
 
         rows.forEach(row => card.appendChild(row));
