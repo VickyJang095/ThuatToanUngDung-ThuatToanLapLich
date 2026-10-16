@@ -72,6 +72,7 @@ body {
 
 .controls h2,
 .results h2,
+.jobs-panel h2,
 .gantt-panel h2 {
     margin-top: 0;
     font-size: 1.2rem;
@@ -91,7 +92,8 @@ body {
     margin-bottom: 8px;
 }
 
-.form-row input {
+.form-row input,
+.form-row select {
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(157, 183, 209, 0.25);
@@ -182,6 +184,10 @@ th {
     font-weight: 600;
 }
 
+.jobs-panel {
+    margin-top: 18px;
+}
+
 .gantt-panel {
     margin-top: 18px;
     border-radius: 14px;
@@ -262,20 +268,22 @@ th {
     border-radius: 3px;
 }
 
-.gantt-months {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(35px, 1fr));
-    gap: 2px;
-    margin: 0 0 10px;
-    padding: 0 6px;
+.gantt-time-axis {
+    position: relative;
+    height: 20px;
+    margin: 0 0 10px 128px;
     color: var(--muted);
-    font-size: 9px;
-    text-transform: uppercase;
+    font-size: 10px;
 }
 
-.gantt-months span {
-    text-align: center;
+.gantt-time-axis span {
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
 }
+
+.gantt-time-axis span:first-child { transform: none; }
+.gantt-time-axis span:last-child { transform: translateX(-100%); }
 
 .gantt-task-row {
     display: grid;
@@ -317,7 +325,7 @@ th {
     color: #f3faff;
     font-weight: 700;
     overflow: hidden;
-    min-width: 18px;
+    min-width: 0;
 }
 
 .gantt-bar.green {
@@ -342,3 +350,12 @@ th {
         flex-direction: column;
     }
 }
+
+.comparison-conclusions {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    line-height: 1.6;
+}
+.comparison-conclusions h3 { margin: 0 0 8px; }
+.comparison-conclusions p { margin: 8px 0; }

@@ -10,7 +10,7 @@
     <div class="app-container">
         <header class="topbar">
             <h1>Tối ưu Lập lịch Đa máy</h1>
-            <p>Genetic Algorithm & Gantt Chart Visualization</p>
+            <p>Genetic Algorithm - Thuật toán di truyền &amp; Gantt Chart - Biểu đồ lịch</p>
         </header>
 
         <main class="main-layout">
@@ -28,22 +28,32 @@
                 </div>
 
                 <div class="form-row">
-                    <label>Population</label>
+                    <label for="deadlineLevel">Mức hạn hoàn thành</label>
+                    <select id="deadlineLevel">
+                        <option value="tight">Chặt (0,5H–0,9H)</option>
+                        <option value="medium" selected>Vừa (0,8H–1,2H)</option>
+                        <option value="wide">Rộng (1,2H–1,8H)</option>
+                    </select>
+                    <small>H = giá trị lớn hơn giữa p lớn nhất và tổng p / số máy. Hạn tính theo giờ nguyên, tối thiểu bằng p.</small>
+                </div>
+
+                <div class="form-row">
+                    <label for="population">Population - Số cá thể</label>
                     <input id="population" type="number" min="20" max="200" value="60" />
                 </div>
 
                 <div class="form-row">
-                    <label>Generations</label>
+                    <label for="generations">Generations - Số thế hệ</label>
                     <input id="generations" type="number" min="20" max="300" value="120" />
                 </div>
 
                 <div class="form-row">
-                    <label>Crossover</label>
+                    <label for="crossover">Crossover - Xác suất lai ghép</label>
                     <input id="crossover" type="number" min="0.1" max="1" step="0.1" value="0.8" />
                 </div>
 
                 <div class="form-row">
-                    <label>Mutation</label>
+                    <label for="mutation">Mutation - Xác suất đột biến</label>
                     <input id="mutation" type="number" min="0.01" max="0.5" step="0.01" value="0.1" />
                 </div>
 
@@ -51,6 +61,7 @@
                     <button id="generateBtn" class="secondary">Sinh dữ liệu</button>
                     <button id="runBtn" class="primary">Chạy thuật toán</button>
                 </div>
+                <p id="runStatus" role="status" aria-live="polite"></p>
             </section>
 
             <section class="panel results">
@@ -71,6 +82,17 @@
                         <p class="metric" id="gaObjective">-</p>
                         <small id="gaRuntime">-</small>
                     </div>
+                    <div class="stat-card ga">
+                        <h3>TS</h3>
+                        <p class="metric" id="tsObjective">-</p>
+                        <small id="tsRuntime">-</small>
+                    </div>
+                    <div class="stat-card bb">
+                        <h3>CP-SAT</h3>
+                        <p class="metric" id="cp_satObjective">-</p>
+                        <small id="cp_satRuntime">-</small>
+                        <p id="cpStatus" role="status">Chưa có lời giải</p>
+                    </div>
                 </div>
 
                 <div class="table-wrap">
@@ -78,9 +100,9 @@
                         <thead>
                             <tr>
                                 <th>Thuật toán</th>
-                                <th>Objective</th>
-                                <th>Runtime</th>
-                                <th>MakeSpan</th>
+                                <th>Objective - Chi phí trễ</th>
+                                <th>Runtime - Thời gian chạy (giây)</th>
+                                <th>Makespan - Mốc hoàn tất toàn bộ (giờ)</th>
                             </tr>
                         </thead>
                         <tbody id="resultTableBody">
@@ -88,13 +110,39 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="comparison-conclusions">
+                    <h3>Nhận xét kết quả</h3>
+                    <div id="comparisonConclusions" role="status">Chạy thuật toán để xem nhận xét.</div>
+                </div>
             </section>
         </main>
 
+        <section class="panel jobs-panel">
+            <div class="gantt-header">
+                <h2>Dữ liệu công việc</h2>
+                <span id="jobsCountLabel" role="status">0 công việc</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID công việc</th>
+                            <th scope="col">Thời gian xử lý p (giờ)</th>
+                            <th scope="col">Hạn hoàn thành d (giờ)</th>
+                            <th scope="col">Trọng số w</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTableBody">
+                        <tr><td colspan="4">Chưa có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <section class="panel gantt-panel">
             <div class="gantt-header">
-                <h2>Gantt Chart</h2>
-                <span>Project Timeline</span>
+                <h2>Gantt Chart - Biểu đồ lịch</h2>
+                <span>Thời gian từ mốc 0 (giờ)</span>
             </div>
             <div class="gantt-board">
                 <div class="gantt-container" id="ganttContainer"></div>

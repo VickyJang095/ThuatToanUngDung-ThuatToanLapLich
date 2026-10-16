@@ -1,0 +1,1 @@
+"""HTTP routes for the scheduling application."""
